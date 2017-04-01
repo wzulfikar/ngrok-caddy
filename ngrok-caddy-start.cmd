@@ -8,8 +8,8 @@ set HOST_IP=0.0.0.0
 set HOST_NAME=localhost
 
 set dir=%UserProfile%
+set ip_config_dump=no
 set ngrok_port=88
-
 set ngrok_exe=%CURRENT_PATH%ngrok.exe
 set caddy_exe=%CURRENT_PATH%caddy.exe
 set caddy_function=browse
@@ -38,6 +38,16 @@ set /p caddy_function=either "browse" or "filemanager" (defaults to "%caddy_func
 set COMMAND=%caddy_exe% -host %HOST_IP% -port %ngrok_port% %caddy_function%
 
 echo.
+set /p ip_config_dump=Dump ip config of this machine (defaults to no)? 
+IF not "%ip_config_dump%" == "no" call :DUMP_IP_CONFIG
+exit
+
+:DUMP_IP_CONFIG
+set ip_config_dump=%dir%\ipconfig.txt
+start /i /b /wait cmd /c ipconfig > %ip_config_dump%
+
+
+echo.
 echo Preparing execution of:
 echo %COMMAND%
 echo.
@@ -47,6 +57,10 @@ echo %caddy_exe%
 echo.
 echo Directory to be shared:
 echo "%dir%".
+echo.
+echo.
+echo IP config dump:
+echo "%ip_config_dump%".
 echo.
 pause
 
